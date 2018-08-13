@@ -46,8 +46,6 @@ service<http:Service> voteService bind { port: 9090 } {
         caller->respond(res) but { error e => log:printError("Error sending response", err = e) };
     }
 
-
-
 }
 
 @http:WebSocketServiceConfig {
@@ -57,9 +55,6 @@ service<http:Service> voteService bind { port: 9090 } {
 }
 service<http:WebSocketService> votews bind { port: 8080 } {
 
-    string ping = "ping";
-    byte[] pingData = ping.toByteArray("UTF-8");
-
     onOpen(endpoint caller) {
         io:println( caller.id + " connected");
         connectionsMap[caller.id] = caller;
@@ -68,6 +63,7 @@ service<http:WebSocketService> votews bind { port: 8080 } {
     onText(endpoint caller, string text, boolean final) {
 
     }
+    
     onIdleTimeout(endpoint caller) {
         io:println("\nReached idle timeout");
         io:println("Closing connection " + caller.id);
